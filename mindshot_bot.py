@@ -216,11 +216,17 @@ def main():
         application.process_update(update)
         return 'ok'
     
+    # Get the Render service URL from environment variable
+    service_url = os.getenv('RENDER_EXTERNAL_URL')
+    if not service_url:
+        logger.error("RENDER_EXTERNAL_URL environment variable not set")
+        return
+    
     # Start the bot
     application.run_webhook(
         listen='0.0.0.0',
         port=int(os.getenv('PORT', 10000)),
-        webhook_url=f'https://{request.host}/webhook'
+        webhook_url=f'{service_url}/webhook'
     )
 
 if __name__ == '__main__':
