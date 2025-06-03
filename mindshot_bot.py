@@ -27,7 +27,7 @@ app = Flask(__name__)
 # Initialize bot
 TELEGRAM_TOKEN = os.getenv('TELEGRAM_BOT_TOKEN')
 OPENAI_API_KEY = os.getenv('OPENAI_API_KEY')
-GOOGLE_CREDENTIALS = json.loads(os.getenv('GOOGLE_CREDENTIALS_JSON'))
+GOOGLE_CREDENTIALS = service_account.Credentials.from_service_account_file('credentials.json')
 
 # Initialize OpenAI
 openai.api_key = OPENAI_API_KEY
