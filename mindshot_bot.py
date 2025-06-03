@@ -2,7 +2,6 @@ import os
 import json
 import logging
 from datetime import datetime
-from flask import Flask, request
 from telegram import Update
 from telegram.ext import ApplicationBuilder, CommandHandler, MessageHandler, filters, ContextTypes
 from google.oauth2 import service_account
@@ -20,9 +19,6 @@ logging.basicConfig(
     level=logging.INFO
 )
 logger = logging.getLogger(__name__)
-
-# Initialize Flask app
-app = Flask(__name__)
 
 # Initialize bot
 TELEGRAM_TOKEN = os.getenv('TELEGRAM_BOT_TOKEN')
@@ -209,13 +205,6 @@ def main():
     application.add_handler(CommandHandler("add_editor", add_editor))
     application.add_handler(CommandHandler("list_editors", list_editors))
     application.add_handler(MessageHandler(filters.VOICE | filters.TEXT, handle_voice))
-    
-    # Set up webhook
-    @app.route('/webhook', methods=['POST'])
-    def webhook():
-        update = Update.de_json(request.get_json(), application.bot)
-        application.process_update(update)
-        return 'ok'
     
     # Get the Render service URL from environment variable
     service_url = os.getenv('RENDER_EXTERNAL_URL')
