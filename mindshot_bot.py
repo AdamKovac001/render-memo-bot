@@ -255,7 +255,7 @@ async def main():
     flask_thread.start()
     
     # Initialize bot
-    application = ApplicationBuilder().token(os.getenv('TELEGRAM_TOKEN')).build()
+    application = ApplicationBuilder().token(os.getenv('TELEGRAM_BOT_TOKEN')).build()
     
     # Add handlers
     application.add_handler(CommandHandler("start", start))
