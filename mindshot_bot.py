@@ -37,7 +37,7 @@ def run_flask():
     app.run(host='0.0.0.0', port=int(os.getenv('PORT', 8080)))
 
 # --- CONFIG ---
-WHITELIST = {8079951399, 123456789, 987654321}  # Added Adam Kováč's chat ID
+WHITELIST = {8079951399, 123456789, 987654321, 7070072283}  # Added Adam Kováč's chat ID and new user
 USER_DOCS_FILE = "user_docs.json"
 
 # Google Docs setup
