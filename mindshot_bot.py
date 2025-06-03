@@ -14,6 +14,7 @@ from dotenv import load_dotenv
 import aiohttp
 from flask import Flask
 from threading import Thread
+import nest_asyncio
 
 # Load environment variables
 load_dotenv()
@@ -249,6 +250,9 @@ async def echo(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text("I'm here to help! Use /start to see instructions.")
 
 async def main():
+    # Apply nest_asyncio to allow nested event loops
+    nest_asyncio.apply()
+    
     # Start Flask server in a separate thread
     flask_thread = Thread(target=run_flask)
     flask_thread.daemon = True
