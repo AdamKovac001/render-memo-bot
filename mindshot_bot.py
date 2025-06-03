@@ -8,6 +8,32 @@ import openai
 import requests
 import datetime
 import re
+import logging
+import asyncio
+from dotenv import load_dotenv
+import aiohttp
+from flask import Flask
+from threading import Thread
+
+# Load environment variables
+load_dotenv()
+
+# Configure logging
+logging.basicConfig(
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+    level=logging.INFO
+)
+logger = logging.getLogger(__name__)
+
+# Initialize Flask app
+app = Flask(__name__)
+
+@app.route('/')
+def home():
+    return "Bot is running!"
+
+def run_flask():
+    app.run(host='0.0.0.0', port=int(os.getenv('PORT', 8080)))
 
 # --- CONFIG ---
 WHITELIST = {8079951399, 123456789, 987654321}  # Added Adam Kováč's chat ID
@@ -222,17 +248,27 @@ async def cursor(update: Update, context: ContextTypes.DEFAULT_TYPE):
 async def echo(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text("I'm here to help! Use /start to see instructions.")
 
-if __name__ == "__main__":
-    import logging
-    logging.basicConfig(level=logging.INFO)
-    token = os.getenv("TELEGRAM_BOT_TOKEN")
-    app = ApplicationBuilder().token(token).build()
-    app.add_handler(CommandHandler("start", start))
-    app.add_handler(CommandHandler("help", help_command))
-    app.add_handler(CommandHandler("add_editor", add_editor))
-    app.add_handler(CommandHandler("list_editors", list_editors))
-    app.add_handler(CommandHandler("remove_editor", remove_editor))
-    app.add_handler(CommandHandler("cursor", cursor))
-    app.add_handler(MessageHandler(filters.VOICE, voice_message))
-    app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, echo))
-    app.run_polling() 
+async def main():
+    # Start Flask server in a separate thread
+    flask_thread = Thread(target=run_flask)
+    flask_thread.daemon = True
+    flask_thread.start()
+    
+    # Initialize bot
+    application = ApplicationBuilder().token(os.getenv('TELEGRAM_TOKEN')).build()
+    
+    # Add handlers
+    application.add_handler(CommandHandler("start", start))
+    application.add_handler(CommandHandler("help", help_command))
+    application.add_handler(CommandHandler("add_editor", add_editor))
+    application.add_handler(CommandHandler("list_editors", list_editors))
+    application.add_handler(CommandHandler("remove_editor", remove_editor))
+    application.add_handler(CommandHandler("cursor", cursor))
+    application.add_handler(MessageHandler(filters.VOICE, voice_message))
+    application.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, echo))
+    
+    # Start the bot
+    await application.run_polling()
+
+if __name__ == '__main__':
+    asyncio.run(main()) 

@@ -39,8 +39,8 @@ def check_google_api():
         from google.oauth2 import service_account
         from googleapiclient.discovery import build
         credentials = service_account.Credentials.from_service_account_file('credentials.json')
-        docs_service = build('docs', 'v1', credentials=credentials)
-        docs_service.documents().list(pageSize=1).execute()
+        drive_service = build('drive', 'v3', credentials=credentials)
+        drive_service.files().list(pageSize=1).execute()
         print("✅ Google Docs API is reachable.")
         return True
     except Exception as e:

@@ -3,9 +3,9 @@ services:
     name: mindshot-bot
     env: python
     buildCommand: pip install -r requirements.txt
-    startCommand: gunicorn mindshot_bot:app
+    startCommand: python mindshot_bot.py
     envVars:
-      - key: TELEGRAM_BOT_TOKEN
+      - key: TELEGRAM_TOKEN
         sync: false
       - key: OPENAI_API_KEY
         sync: false
