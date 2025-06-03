@@ -4,7 +4,7 @@ import logging
 from datetime import datetime
 from flask import Flask, request
 from telegram import Update
-from telegram.ext import Application, CommandHandler, MessageHandler, filters, ContextTypes
+from telegram.ext import ApplicationBuilder, CommandHandler, MessageHandler, filters, ContextTypes
 from google.oauth2 import service_account
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
@@ -201,7 +201,8 @@ async def handle_voice(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 def main():
     """Initialize bot and set up webhook."""
-    application = Application.builder().token(TELEGRAM_TOKEN).build()
+    # Build the application
+    application = ApplicationBuilder().token(TELEGRAM_TOKEN).build()
     
     # Add handlers
     application.add_handler(CommandHandler("start", start))
